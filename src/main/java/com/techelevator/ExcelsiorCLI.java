@@ -8,7 +8,7 @@ public class ExcelsiorCLI {
 
 	public static void main(String[] args) {
 		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setUrl("jdbc:postgresql://localhost:5432/excelsior_venues");
+		dataSource.setUrl("jdbc:postgresql://localhost:5432/venues");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
 
