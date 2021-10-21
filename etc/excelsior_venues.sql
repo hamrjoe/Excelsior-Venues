@@ -335,3 +335,12 @@ ALTER SEQUENCE space_id_seq RESTART 1000;
 ALTER SEQUENCE venue_id_seq RESTART 1000;
 
 COMMIT;
+
+
+
+
+SELECT venue.name AS venue, venue.description , ARRAY_AGG(category.name) AS categories, city.name AS city, city.state_abbreviation AS state FROM venue
+JOIN category_venue ON venue.id = category_venue.venue_id
+JOIN category ON category_venue.category_id = category.id
+JOIN city ON venue.city_id = city.id where venue.id = 1 
+GROUP BY venue, venue.description, city, state;
