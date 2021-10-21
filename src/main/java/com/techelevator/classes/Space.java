@@ -46,6 +46,18 @@ public class Space {
         return max_occupancy;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setVenue_id(long venue_id) {
+        this.venue_id = venue_id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setIs_accessible(boolean is_accessible) {
         this.is_accessible = is_accessible;
     }
