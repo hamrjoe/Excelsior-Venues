@@ -10,7 +10,7 @@ public class Venue {
     private String description;
     private String cityName;
     private String state;
-    private List<String> categoryIds;
+    private List<String> categoryNames;
 
     public long getVenue_id() {
         return venue_id;
@@ -36,8 +36,8 @@ public class Venue {
         return state;
     }
 
-    public List<String> getCategoryIds() {
-        return categoryIds;
+    public List<String> getCategoryNames() {
+        return categoryNames;
     }
 
     public void setVenue_id(long venue_id) {
@@ -64,7 +64,7 @@ public class Venue {
         this.state = state;
     }
 
-    public void setCategory(List<String> categoryIds) {
-        this.categoryIds = categoryIds;
+    public void setCategoryNames(List<String> categoryNames) {
+        this.categoryNames = categoryNames;
     }
 }
