@@ -47,7 +47,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 
         List<String> categoryIdList = new ArrayList<>();
 
-        String sql1 = "SELECT venue.name AS venue_name, venue.city_id, venue.description, city.name AS city, city.state_abbreviation AS state FROM venue JOIN city ON venue.city_id = city.id WHERE venue.id = ?";
+        String sql1 = "SELECT venue.id, venue.name AS venueName, venue.city_id, venue.description, city.name AS city, city.state_abbreviation AS state FROM venue JOIN city ON venue.city_id = city.id WHERE venue.id = ?";
         SqlRowSet result1= jdbcTemplate.queryForRowSet(sql1, venueId);
 
         String sql2 = "SELECT * FROM category_venue WHERE venue_id = ?";
@@ -138,7 +138,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
     private Venue mapRowToVenue1(SqlRowSet result1, List<String> categoryIdList){
         Venue venue = new Venue();
         venue.setVenue_id(result1.getLong("id"));
-        venue.setName(result1.getString("venue_name"));
+        venue.setName(result1.getString("venueName"));
         venue.setCity_id(result1.getLong("city_id"));
         venue.setDescription(result1.getString("description"));
         venue.setCityName(result1.getString("city"));
