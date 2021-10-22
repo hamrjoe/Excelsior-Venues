@@ -3,6 +3,7 @@ package com.techelevator;
 import com.techelevator.JDBC.JDBCVenueSpaceDAO;
 import com.techelevator.classes.Space;
 import com.techelevator.classes.Venue;
+
 import org.junit.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
@@ -12,11 +13,16 @@ import static org.junit.Assert.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
+
 import java.util.Formatter;
 import java.util.List;
 
 public class VenueSpaceDAOIntegrationTest{
+
 
     private static SingleConnectionDataSource dataSource;
     JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -102,7 +108,7 @@ public class VenueSpaceDAOIntegrationTest{
         assertEquals(dailyRate , space.getDaily_rate());
     }
 
-    @Test
+    /*@Test
     public void search_space_by_date_and_occupancy_test(){
         List<Space> availableSpaces= dao.searchSpaceByDateAndOccupancy(8,8,2);
         List<Space> checkAvailable= dao.searchSpaceByDateAndOccupancy(9,10,2);
@@ -117,6 +123,28 @@ public class VenueSpaceDAOIntegrationTest{
         assertEquals("space1",space.getName());
         assertTrue(availableSpaceNames.contains("space1") );
         assertFalse(checkAvailableName.contains("space1"));
+
+    }*/
+
+    @Test
+    public void check_available_spaces_test() {
+
+        LocalDate startDate1 = LocalDate.parse("2021-10-15");
+        LocalDate endDate1 = LocalDate.parse("2021-10-18");
+        /*Date openFrom = Month.of(4);
+        Date openTo = Month.of(9);*/
+
+        List<Space> spacesNegativeTest = dao.checkAvailableSpaces(nextVenueId, startDate1, endDate1,2 );
+/*        Space space = spaces.get();
+        String spaceName = space.getName();*/
+
+
+        //test occupancy
+        //test available dates
+
+        //Negative Test
+        assertEquals(0,spacesNegativeTest.size());
+        //check against existing reservations
 
     }
 

@@ -1,6 +1,8 @@
 package com.techelevator.classes;
 
+import java.time.LocalDate;
 import java.util.Date;
+
 
 public class Reservation {
 
@@ -33,6 +35,14 @@ public class Reservation {
 
     public String getReserved_for() {
         return reserved_for;
+    }
+
+    public void setReservation_id(long reservation_id) {
+        this.reservation_id = reservation_id;
+    }
+
+    public void setSpace_id(long space_id) {
+        this.space_id = space_id;
     }
 
     public void setNumber_of_attendees(int number_of_attendees) {
