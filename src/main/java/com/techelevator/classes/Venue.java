@@ -67,5 +67,4 @@ public class Venue {
     public void setCategory(List<String> categoryIds) {
         this.categoryIds = categoryIds;
     }
-
 }
