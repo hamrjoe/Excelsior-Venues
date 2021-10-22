@@ -1,5 +1,7 @@
 package com.techelevator.classes;
 
+import java.util.List;
+
 public class Venue {
 
     private long venue_id;
@@ -8,7 +10,7 @@ public class Venue {
     private String description;
     private String cityName;
     private String state;
-    private String category;
+    private List<String> categoryIds;
 
     public long getVenue_id() {
         return venue_id;
@@ -34,8 +36,8 @@ public class Venue {
         return state;
     }
 
-    public String getCategory() {
-        return category;
+    public List<String> getCategoryIds() {
+        return categoryIds;
     }
 
     public void setVenue_id(long venue_id) {
@@ -62,8 +64,8 @@ public class Venue {
         this.state = state;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategory(List<String> categoryIds) {
+        this.categoryIds = categoryIds;
     }
 
 }

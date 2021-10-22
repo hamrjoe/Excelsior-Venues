@@ -9,8 +9,8 @@ public class Space {
     private long venue_id;
     private String name;
     private boolean is_accessible;
-    private Date open_from;
-    private Date open_to;
+    private Integer open_from;
+    private Integer open_to;
     private BigDecimal daily_rate;
     private int max_occupancy;
 
@@ -30,11 +30,11 @@ public class Space {
         return is_accessible;
     }
 
-    public Date getOpen_from() {
+    public Integer getOpen_from() {
         return open_from;
     }
 
-    public Date getOpen_to() {
+    public Integer getOpen_to() {
         return open_to;
     }
 
@@ -62,11 +62,11 @@ public class Space {
         this.is_accessible = is_accessible;
     }
 
-    public void setOpen_from(Date open_from) {
+    public void setOpen_from(Integer open_from) {
         this.open_from = open_from;
     }
 
-    public void setOpen_to(Date open_to) {
+    public void setOpen_to(Integer open_to) {
         this.open_to = open_to;
     }
 
