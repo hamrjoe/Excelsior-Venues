@@ -1,14 +1,20 @@
 package com.techelevator;
 
 import com.techelevator.JDBC.JDBCVenueSpaceDAO;
+import com.techelevator.classes.Reservation;
 import com.techelevator.classes.Space;
 import com.techelevator.classes.Venue;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -70,15 +76,28 @@ public class UserInterface {
                  + String.format("%-28s", "Name"  )
                  + String.format("%-7s","Open")
                  + String.format("%-8s","Close")
-                 + String.format("%-15s","Daily Rate")
+                 + String.format("%-16s","Daily Rate")
                  + String.format("%-15s","Max Occupancy\n")
         );
         for (Space space : spacesToPrint) {
             System.out.printf("%-5s", "#" + Integer.toString(count));
             System.out.printf("%-28s", space.getName());
-            System.out.printf("%-7d", space.getOpen_from());
-            System.out.printf("%-8d", space.getOpen_to());
-            System.out.printf("%-15.2f", "$" +space.getDaily_rate());
+
+            if(space.getOpen_from()== 0){
+                System.out.printf("%-7s", "");
+
+            }else {
+                System.out.printf("%-7s", Month.of(space.getOpen_from()).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+            }
+
+            if(space.getOpen_to()== 0) {
+                System.out.printf("%-8s", "");
+
+            }else {
+                System.out.printf("%-8s", Month.of(space.getOpen_to()).getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+            }
+
+            System.out.printf(String.format("$%-15.2f",space.getDaily_rate()));
             System.out.printf("%-15d", space.getMax_occupancy());
 
             System.out.print("\n");
@@ -110,67 +129,72 @@ public class UserInterface {
         return reservationDetails;
     }
 
-    public LocalDate getEndDate (List <String> reservationDetails ){
-        LocalDate startDate=LocalDate.parse(getReservationDetails().get(0));
-        int numberOfDays=Integer.parseInt(getReservationDetails().get(1));
-        LocalDate endDate=startDate.plusDays(numberOfDays);
+    public LocalDate getEndDate (LocalDate startDate, int numberOfDays ){
 
+        LocalDate endDate = startDate.plusDays(numberOfDays);
         return endDate;
     }
 
-    public LocalDate getStartDate (List <String> reservationDetails){
-        LocalDate startDate=LocalDate.parse(getReservationDetails().get(0));
-
-        return startDate;
-    }
-    public int numberOfDays (List<String>  reservationDetails){
-        int numberOfDays=Integer.parseInt(getReservationDetails().get(1));
-
-        return numberOfDays;
-    }
-
-    public int getoccupancy (List <String> reservationDetails){
-        int attendess=Integer.parseInt(getReservationDetails().get(2));
-
-        return attendess;
-    }
 
     public List <String> listAvailableSpaces (List<Space> spaces, int numberOfDays) {
         List<String> bookingDetails = new ArrayList<>();
+        BigDecimal totalCost = new BigDecimal(0.00);
 
         System.out.println("The following spaces are avaialble based on your needs: \n");
 
-        System.out.println(String.format("%-5s", "Space #")
+        System.out.println(String.format("%-10s", "Space#")
                 + String.format("%-28s", "Name")
-                + String.format("%-7s", "Daily Rate")
-                + String.format("%-8s", "Max Occup.")
+                + String.format("%-16s", "Daily Rate")
+                + String.format("%-14s", "Max Occup.")
                 + String.format("%-15s", "Accessible?")
                 + String.format("%-15s", "Total Cost\n"));
 
         for (Space space : spaces) {
-            BigDecimal totalCost = space.getDaily_rate().multiply(BigDecimal.valueOf(numberOfDays));
-            System.out.printf("%-5s", space.getId());
+
+            String isAccessible= "";
+
+            if(space.isIs_accessible() == true){
+                isAccessible = "Yes";
+            }else{
+                isAccessible = "No";
+            }
+
+            totalCost = space.getDaily_rate().multiply(BigDecimal.valueOf(numberOfDays));
+            System.out.printf("%-10x", space.getId());
             System.out.printf("%-28s", space.getName());
-            System.out.printf("%-7d", space.getDaily_rate());
-            System.out.printf("%-8d", space.isIs_accessible());
-            System.out.printf("%-15.2f", "$" + totalCost);
+            System.out.printf(String.format("$%-15.2f",space.getDaily_rate()));
+            System.out.printf("%-14d", space.getMax_occupancy());
+            System.out.printf("%-15s", isAccessible);
+            System.out.printf(String.format("$%-15.2f", totalCost));
 
 
             System.out.print("\n");
 
         }
-        System.out.println("Which space would you like to reserve? (enter 0 to cancel)? ");
+        System.out.println("\n Which space would you like to reserve? (enter 0 to cancel)? ");
         bookingDetails.add(scanner.nextLine());
         System.out.println("Who is this reservation for?\n");
         bookingDetails.add(scanner.nextLine());
+        bookingDetails.add(totalCost.toString());
 
         return bookingDetails;
 
     }
 
+    public void printReservation(long bookSpaceId,String venueName, String spaceName, String bookingCost, Reservation reservation){
+
+        System.out.println("Thanks for submitting your reservation! The details for your event are listed below:");
+        System.out.println("Confirmation: " + reservation.getReservation_id());
+        System.out.println("Venue: " + venueName);
+        System.out.println("Space: " + spaceName);
+        System.out.println("Reserved for: " + reservation.getReserved_for());
+        System.out.println("Attendees: " + reservation.getNumber_of_attendees());
+        System.out.println("Arrival Date: " + reservation.getStart_date());
+        System.out.println("Depart Date: " + reservation.getEnd_date());
+        System.out.println("Total cost: $" + bookingCost);
 
 
-
+    }
 
 
     public void printMessage (String message) {

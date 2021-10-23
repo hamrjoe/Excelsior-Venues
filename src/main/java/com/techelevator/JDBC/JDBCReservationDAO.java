@@ -16,18 +16,19 @@ public class JDBCReservationDAO implements ReservationDAO {
 
     private JdbcTemplate jdbcTemplate;
 
-    private DataSource datasource;
 
-    long nextReservationId = getNextReservationId();
+
+
 
     public JDBCReservationDAO(DataSource dataSource) {
-        this.datasource = dataSource;
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     public Reservation makeReservation(long space_id, int numberOfAttendees, LocalDate start_date, LocalDate end_date, String reserved_for) {
+        long nextReservationId = getNextReservationId();
      String sql = "INSERT INTO reservation (reservation_id, space_id, number_of_attendees, start_date, end_date, reserved_for) VALUES (?,?,?,?,?,?)";
-     JdbcTemplate jdbcTemplate= new JdbcTemplate(datasource);
+
 
      jdbcTemplate.update(sql,nextReservationId, space_id,numberOfAttendees, start_date, end_date, reserved_for);
 
@@ -62,7 +63,7 @@ public class JDBCReservationDAO implements ReservationDAO {
 
 
     private long getNextReservationId() {
-        JdbcTemplate jdbcTemplate= new JdbcTemplate(datasource);
+
         SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('reservation_reservation_id_seq')");
         if (nextIdResult.next()) {
             return nextIdResult.getLong(1);

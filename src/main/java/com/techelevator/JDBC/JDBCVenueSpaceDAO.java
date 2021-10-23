@@ -73,7 +73,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
     public List<Space> viewSpaces(long venueId) {
         List<Space> spaces = new ArrayList<>();
 
-        String sql = "SELECT name, open_from, open_to,(SELECT CAST (daily_rate AS Decimal))  ,max_occupancy FROM space WHERE venue_id=?;";
+        String sql = "SELECT id, name, open_from, open_to,(SELECT CAST (daily_rate AS Decimal))  ,max_occupancy FROM space WHERE venue_id=?;";
 
         //calling database, executing query
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql,venueId);
@@ -90,29 +90,6 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 
         return spaces;
     }
-
- /*   @Override
-    public List<Space> searchSpaceByDateAndOccupancy(int openingMonth, int closingMonth, int occupancy ) {
-        // list object to add available spaces
-        List<Space> availableSpaces = new ArrayList<>();
-
-        // list of all spaces
-        List<Space> allSpaces = viewSpaces();
-
-        for (Space space : allSpaces) {
-            if (occupancy <= space.getMax_occupancy()) {
-                if (space.getOpen_from() == null ) {
-                    availableSpaces.add(space);
-
-                }else if((space.getOpen_from() <= openingMonth) && (space.getOpen_to() >= closingMonth)){
-                    availableSpaces.add(space);
-                }
-
-            }
-        }
-
-        return availableSpaces;
-    }*/
 
 
     public List<Space> checkAvailableSpaces(long venueId, LocalDate startDate, LocalDate endDate, int occupancy) {
@@ -138,6 +115,21 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
         }
 
         return availableSpaces;
+    }
+
+    public Space retrieveSpaceById(long spaceID){
+        Space space = new Space();
+        String sql = "SELECT id, name, is_accessible, open_from, open_to,(SELECT CAST (daily_rate AS Decimal))  , max_occupancy FROM space WHERE id=?;";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, spaceID);
+
+        if(results.next()) {
+
+            space = mapRowToSpace(results);
+
+        }
+
+        return space;
     }
 
     private String mapRowToVenueName(SqlRowSet results) {
@@ -170,6 +162,7 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 
     private Space mapRowToSpace(SqlRowSet results) {
         Space space = new Space();
+        space.setId(results.getLong("id"));
         space.setName(results.getString("name"));
         space.setOpen_from(results.getInt("open_from"));
         space.setOpen_to(results.getInt("open_to"));

@@ -11,6 +11,7 @@ import com.techelevator.classes.Space;
 import com.techelevator.classes.Venue;
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class ExcelsiorCLI {
 		ExcelsiorCLI application = new ExcelsiorCLI();
 		application.run();
 	}
-
+//constructor
 	public ExcelsiorCLI() {
 		// create your DAOs here
 
@@ -37,7 +38,10 @@ public class ExcelsiorCLI {
 
 	public void run() {
 
+       // Main menu
 		while (true) {
+
+			//Calling PrintMainMenu method from user
 
 			String choice = userInterface.printMainMenu();
 
@@ -58,18 +62,31 @@ public class ExcelsiorCLI {
 									String spaceChoice=userInterface.printListOfSpaces(listOfSpaces, venue.getName());
 
 
-									if(spaceChoice.equals("1")){
-										List <String> reservationDetails=userInterface.getReservationDetails();
-										LocalDate startDate=userInterface.getStartDate(reservationDetails);
-										LocalDate endDate=userInterface.getEndDate(reservationDetails);
-										int numberOfOccupants= userInterface.getoccupancy(reservationDetails);
-										int numberOfDays=Integer.parseInt(reservationDetails.get(1));
-										long chosenVenue=venue.getVenue_id();
-										while (true){
-											List <Space> allSpaces=venueSpaceDAO.checkAvailableSpaces(chosenVenue, startDate,endDate,numberOfOccupants);
 
-											userInterface.listAvailableSpaces(allSpaces,numberOfDays);
+								if(spaceChoice.equals("1")){
+										List <String> reservationDetails=userInterface.getReservationDetails();
+										LocalDate startDate = LocalDate.parse(reservationDetails.get(0));
+										int lengthOfStay = Integer.parseInt(reservationDetails.get(1));
+										int numberOfAttendees = Integer.parseInt(reservationDetails.get(2));
+										LocalDate endDate=userInterface.getEndDate(startDate,lengthOfStay);
+										long chosenVenue=venue.getVenue_id();
+
+										List <Space> allSpaces=venueSpaceDAO.checkAvailableSpaces(chosenVenue, startDate,endDate,numberOfAttendees);
+										List<String> userDetailsForReservation = userInterface.listAvailableSpaces(allSpaces,lengthOfStay);
+										Long bookSpaceId= Long.parseLong(userDetailsForReservation.get(0));
+										String userName = userDetailsForReservation.get(1);
+										String bookingCost = userDetailsForReservation.get(2);
+
+
+										if(bookSpaceId==0){
+											break;
+										}else{
+											Reservation reservation = reservationDAO.makeReservation(bookSpaceId,numberOfAttendees,startDate,endDate,userName);
+											String spaceName = venueSpaceDAO.retrieveSpaceById(bookSpaceId).getName();
+											userInterface.printReservation(bookSpaceId,venue.getName(), spaceName,bookingCost, reservation);
 										}
+
+
 									}
 
 								}
