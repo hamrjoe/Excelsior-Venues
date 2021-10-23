@@ -12,7 +12,7 @@ public interface VenueSpaceDAO {
 
     public List<String> viewVenues();
     public Venue retrieveVenueDetails(long venueId);
-    public List<Space> viewSpaces();
+    public List<Space> viewSpaces(long venueId);
     //public List<Space> searchSpaceByDateAndOccupancy(int startDate, int endDate, int occupancy );
     public List<Space> checkAvailableSpaces(long venueId, LocalDate startDate, LocalDate endDate, int occupancy);
 

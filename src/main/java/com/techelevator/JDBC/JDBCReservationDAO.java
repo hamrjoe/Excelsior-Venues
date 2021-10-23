@@ -4,6 +4,7 @@ import com.techelevator.DAO.ReservationDAO;
 import com.techelevator.classes.Reservation;
 import com.techelevator.classes.Space;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
@@ -13,7 +14,8 @@ import java.util.*;
 
 public class JDBCReservationDAO implements ReservationDAO {
 
-    //private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
+
     private DataSource datasource;
 
     long nextReservationId = getNextReservationId();
@@ -44,7 +46,9 @@ public class JDBCReservationDAO implements ReservationDAO {
     }
 
 
-   private Reservation mapRowToReservation(SqlRowSet results) {
+
+
+    private Reservation mapRowToReservation(SqlRowSet results) {
         Reservation reservation = new Reservation();
         reservation.setReservation_id(results.getLong("reservation_id"));
         reservation.setSpace_id(results.getInt("space_id"));
