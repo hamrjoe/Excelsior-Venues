@@ -70,13 +70,13 @@ public class JDBCVenueSpaceDAO implements VenueSpaceDAO {
 
 
     @Override
-    public List<Space> viewSpaces() {
+    public List<Space> viewSpaces(long venueId) {
         List<Space> spaces = new ArrayList<>();
 
-        String sql = "SELECT name, open_from, open_to,(SELECT CAST (daily_rate AS Decimal))  ,max_occupancy FROM space;";
+        String sql = "SELECT name, open_from, open_to,(SELECT CAST (daily_rate AS Decimal))  ,max_occupancy FROM space WHERE venue_id=?;";
 
         //calling database, executing query
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,venueId);
 
         //loop through each row from database
         while (results.next()) {

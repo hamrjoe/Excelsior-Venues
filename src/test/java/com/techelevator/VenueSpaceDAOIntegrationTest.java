@@ -96,7 +96,7 @@ public class VenueSpaceDAOIntegrationTest{
     @Test
     public void view_spaces_test(){
 
-        List<Space> allspaces = dao.viewSpaces();
+        List<Space> allspaces = dao.viewSpaces(nextVenueId);
         Space space=allspaces.get(allspaces.size()-1);
 
         String newspaceName = space.getName();
