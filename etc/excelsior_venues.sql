@@ -344,19 +344,3 @@ JOIN category_venue ON venue.id = category_venue.venue_id
 JOIN category ON category_venue.category_id = category.id
 JOIN city ON venue.city_id = city.id where venue.id = 1 
 GROUP BY venue, venue.description, city, state;
-
-SELECT * FROM reservation where space_id =3;
-
-SELECT open_from from space WHERE id = 3
-
-
-START TRANSACTION
-
-
-INSERT into space (id, venue_id, name, is_accessible, open_from, open_to, daily_rate, max_occupancy) VALUES (200,1, 'space1', true, 4, 9, '$100', 2);
-
-ROLLBACK
-
-SELECT id, name, city_id, description from venue;
-
-SELECT * FROM category_venue WHERE venue_id = 1
