@@ -131,20 +131,25 @@ public class VenueSpaceDAOIntegrationTest{
 
         LocalDate startDate1 = LocalDate.parse("2021-10-15");
         LocalDate endDate1 = LocalDate.parse("2021-10-18");
-        /*Date openFrom = Month.of(4);
-        Date openTo = Month.of(9);*/
 
         List<Space> spacesNegativeTest = dao.checkAvailableSpaces(nextVenueId, startDate1, endDate1,2 );
-/*        Space space = spaces.get();
-        String spaceName = space.getName();*/
 
 
-        //test occupancy
-        //test available dates
-
-        //Negative Test
         assertEquals(0,spacesNegativeTest.size());
         //check against existing reservations
+
+        LocalDate startDate2 = LocalDate.parse("2021-09-05");
+        LocalDate endDate2 = LocalDate.parse("2021-09-10");
+        List<Space> spacesPositiveTest = dao.checkAvailableSpaces(nextVenueId,startDate2, endDate2, 2 );
+        assertEquals(1, spacesPositiveTest.size());
+        assertEquals(2,spacesPositiveTest.get(0).getMax_occupancy());
+
+        LocalDate startDate3 = LocalDate.parse("2021-10-18");
+        LocalDate endDate3 = LocalDate.parse("2021-10-19");
+
+        List<Space> spacesPositiveTest1 = dao.checkAvailableSpaces(1, startDate3, endDate3, 100 );
+        assertEquals(1, spacesPositiveTest1.size());
+        assertEquals(110,spacesPositiveTest1.get(0).getMax_occupancy());
 
     }
 
@@ -165,16 +170,16 @@ public class VenueSpaceDAOIntegrationTest{
             throw new RuntimeException("Something went wrong while getting an id for the new space");
         }
     }
-    private List<String> getSpaceNames(List<Space> spaces){
-        List <Space>allSpaces=spaces;
-        List <String> spaceNames=new ArrayList<>();
-
-        for (Space space:allSpaces){
-           spaceNames.add(space.getName());
-        }
-
-       return spaceNames;
-    }
+//    private List<String> getSpaceNames(List<Space> spaces){
+//        List <Space>allSpaces=spaces;
+//        List <String> spaceNames=new ArrayList<>();
+//
+//        for (Space space:allSpaces){
+//           spaceNames.add(space.getName());
+//        }
+//
+//       return spaceNames;
+//    }
 
 
 }

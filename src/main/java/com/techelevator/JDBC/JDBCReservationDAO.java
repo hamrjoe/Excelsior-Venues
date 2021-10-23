@@ -13,22 +13,38 @@ import java.util.*;
 
 public class JDBCReservationDAO implements ReservationDAO {
 
-    private JdbcTemplate jdbcTemplate;
+    //private JdbcTemplate jdbcTemplate;
+    private DataSource datasource;
+
+    long nextReservationId = getNextReservationId();
+
     public JDBCReservationDAO(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.datasource = dataSource;
     }
-
-
 
     @Override
-    public Reservation makeReservation() {
+    public Reservation makeReservation(long space_id, int numberOfAttendees, LocalDate start_date, LocalDate end_date, String reserved_for) {
+     String sql = "INSERT INTO reservation (reservation_id, space_id, number_of_attendees, start_date, end_date, reserved_for) VALUES (?,?,?,?,?,?)";
+     JdbcTemplate jdbcTemplate= new JdbcTemplate(datasource);
 
+     jdbcTemplate.update(sql,nextReservationId, space_id,numberOfAttendees, start_date, end_date, reserved_for);
 
-        return null;
+     String sql2 = "SELECT * FROM reservation WHERE reservation_id = ?";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql2, nextReservationId);
+
+        Reservation reservation = new Reservation();
+
+        while(results.next()){
+            reservation = mapRowToReservation(results);
+        }
+
+        return reservation;
+
     }
 
 
-   /* private Reservation mapRowToReservation(SqlRowSet results) {
+   private Reservation mapRowToReservation(SqlRowSet results) {
         Reservation reservation = new Reservation();
         reservation.setReservation_id(results.getLong("reservation_id"));
         reservation.setSpace_id(results.getInt("space_id"));
@@ -38,7 +54,18 @@ public class JDBCReservationDAO implements ReservationDAO {
         reservation.setReserved_for(results.getString("reserved_for"));
 
         return reservation;
-    }*/
+    }
+
+
+    private long getNextReservationId() {
+        JdbcTemplate jdbcTemplate= new JdbcTemplate(datasource);
+        SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('reservation_reservation_id_seq')");
+        if (nextIdResult.next()) {
+            return nextIdResult.getLong(1);
+        } else {
+            throw new RuntimeException("Something went wrong while getting an id for the new reservation");
+        }
+    }
 
 
 }
