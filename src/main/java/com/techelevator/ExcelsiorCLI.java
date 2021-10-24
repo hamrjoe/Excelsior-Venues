@@ -32,7 +32,7 @@ public class ExcelsiorCLI {
 		// create your DAOs here
 
 		userInterface = new UserInterface();
-		//reservationDAO = new JDBCReservationDAO(getDataSource());
+		reservationDAO = new JDBCReservationDAO(getDataSource());
 		venueSpaceDAO = new JDBCVenueSpaceDAO(getDataSource());
 	}
 
@@ -73,21 +73,20 @@ public class ExcelsiorCLI {
 
 										List <Space> allSpaces=venueSpaceDAO.checkAvailableSpaces(chosenVenue, startDate,endDate,numberOfAttendees);
 										List<String> userDetailsForReservation = userInterface.listAvailableSpaces(allSpaces,lengthOfStay);
+
+										if (userDetailsForReservation.size() == 0) {
+											break;
+										}
 										Long bookSpaceId= Long.parseLong(userDetailsForReservation.get(0));
 										String userName = userDetailsForReservation.get(1);
 										String bookingCost = userDetailsForReservation.get(2);
 
-
-										if(bookSpaceId==0){
-											break;
-										}else{
-											Reservation reservation = reservationDAO.makeReservation(bookSpaceId,numberOfAttendees,startDate,endDate,userName);
-											String spaceName = venueSpaceDAO.retrieveSpaceById(bookSpaceId).getName();
-											userInterface.printReservation(bookSpaceId,venue.getName(), spaceName,bookingCost, reservation);
+										Reservation reservation = reservationDAO.makeReservation(bookSpaceId,numberOfAttendees,startDate,endDate,userName);
+										String spaceName = venueSpaceDAO.retrieveSpaceById(bookSpaceId).getName();
+										userInterface.printReservation(bookSpaceId,venue.getName(), spaceName,bookingCost, reservation);
+										System.exit(0);
 										}
 
-
-									}
 
 								}
 

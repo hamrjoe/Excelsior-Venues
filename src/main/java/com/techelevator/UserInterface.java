@@ -9,13 +9,13 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 public class UserInterface {
 
@@ -116,8 +116,15 @@ public class UserInterface {
     public List<String> getReservationDetails(){
         List <String> reservationDetails=new ArrayList<>();
 
+
+
         System.out.println("When do you need the space?  Please enter in date format yyyy-mm-dd");
         String startDate=scanner.nextLine();
+        while (!checkDateFormat(startDate)) {
+            System.out.println("Invalid Date!!!!!!!!!!!!!!!!!!!");
+            System.out.println("Please enter date in correct format yyyy-mm-dd:");
+            startDate = scanner.nextLine();
+        }
         reservationDetails.add(startDate);
         System.out.println("How many days will you need the space? Please enter as a number");
         String lengthOfStay=scanner.nextLine();
@@ -172,11 +179,15 @@ public class UserInterface {
 
         }
         System.out.println("\n Which space would you like to reserve? (enter 0 to cancel)? ");
-        bookingDetails.add(scanner.nextLine());
-        System.out.println("Who is this reservation for?\n");
-        bookingDetails.add(scanner.nextLine());
-        bookingDetails.add(totalCost.toString());
-
+        String userInput = scanner.nextLine();
+        if (userInput.equals("0")) {
+            return bookingDetails;
+        } else {
+            bookingDetails.add(userInput);
+            System.out.println("Who is this reservation for?\n");
+            bookingDetails.add(scanner.nextLine());
+            bookingDetails.add(totalCost.toString());
+        }
         return bookingDetails;
 
     }
@@ -200,5 +211,20 @@ public class UserInterface {
     public void printMessage (String message) {
         System.out.println(message);
     }
+
+    public boolean checkDateFormat(String input){
+        boolean checkFormat;
+
+        if (input.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")){
+            checkFormat=true;
+        }
+
+        else {
+            checkFormat = false;
+        }
+        return checkFormat;
+    }
+
+
 
 }
