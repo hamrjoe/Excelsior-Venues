@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
 
 public class ReservationDAOTest extends DAOIntegrationTest{
 
-    //private static SingleConnectionDataSource dataSource;
     JdbcTemplate jdbcTemplate = null;
     private JDBCReservationDAO dao;
 
@@ -27,9 +26,7 @@ public class ReservationDAOTest extends DAOIntegrationTest{
 
     }
 
-
     @Test
-
     public void make_reservation_test() {
 
         LocalDate startDate1 = LocalDate.parse("2021-10-15");
@@ -40,12 +37,4 @@ public class ReservationDAOTest extends DAOIntegrationTest{
     }
 
 
-//    private long getNextReservationId() {
-//        SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('reservation_reservation_id_seq')");
-//        if (nextIdResult.next()) {
-//            return nextIdResult.getLong(1);
-//        } else {
-//            throw new RuntimeException("Something went wrong while getting an id for the new reservation");
-//        }
-//    }
 }

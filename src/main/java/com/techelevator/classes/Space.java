@@ -18,9 +18,7 @@ public class Space {
         return id;
     }
 
-    public long getVenue_id() {
-        return venue_id;
-    }
+    public long getVenue_id() { return venue_id; }
 
     public String getName() {
         return name;

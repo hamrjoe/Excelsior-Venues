@@ -21,35 +21,21 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
-public class VenueSpaceDAOIntegrationTest{
+public class VenueSpaceDAOIntegrationTest extends DAOIntegrationTest{
 
-
-    private static SingleConnectionDataSource dataSource;
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    JdbcTemplate jdbcTemplate = null;
     private JDBCVenueSpaceDAO dao;
-    long nextVenueId = getNextVenueId();
-    long nextSpaceId = getNextSpaceId();
+    long nextVenueId;
+    long nextSpaceId;
 
-
-    @BeforeClass
-    public static void setupDataSource() {
-        dataSource = new SingleConnectionDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/venues");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("postgres1");
-        dataSource.setAutoCommit(false);
-    }
-
-
-
-    @AfterClass
-    public static void closeDataSource() throws SQLException {
-        dataSource.destroy();
-    }
 
     @Before
     public void setup() {
-        dao = new JDBCVenueSpaceDAO(dataSource);
+        dao = new JDBCVenueSpaceDAO(getDataSource());
+        jdbcTemplate = new JdbcTemplate(getDataSource());
+
+         nextVenueId = getNextVenueId();
+         nextSpaceId = getNextSpaceId();
 
         String sqlInsertVenue = "INSERT INTO venue (id, name, city_id, description) VALUES (?,'venue1', 1, 'Brand new venue')";
         String sqlInsertSpace = "INSERT INTO space (id, venue_id, name, is_accessible, open_from, open_to, daily_rate, max_occupancy) VALUES (?,?, 'space1', true, 4, 9, '$100', 2)";
@@ -63,36 +49,27 @@ public class VenueSpaceDAOIntegrationTest{
     }
 
 
-    @After
-    public void rollback() throws SQLException {
-        dataSource.getConnection().rollback();
-    }
-
-
     @Test
-
     public void view_venue_test(){
 
         List<String> allVenues = dao.viewVenues();
 
         assertNotNull(allVenues);
-        assertTrue(allVenues.contains("space1"));
+        assertTrue(allVenues.contains("venue1"));
     }
 
-
     @Test
-
     public void retrieve_venue_details_test(){
 
        Venue venue = dao.retrieveVenueDetails(nextVenueId);
        List <String> categoryNames=venue.getCategoryNames();
-
 
         assertNotNull(venue);
         assertEquals("Bona",venue.getCityName());
         assertEquals("Luxury", categoryNames.get(0) );
         assertEquals("Modern",categoryNames.get(1));
     }
+
     @Test
     public void view_spaces_test(){
 
@@ -102,29 +79,10 @@ public class VenueSpaceDAOIntegrationTest{
         String newspaceName = space.getName();
         BigDecimal dailyRate= new BigDecimal(100.00).setScale(2, RoundingMode.HALF_DOWN);
 
-
         assertNotNull(allspaces);
         assertEquals("space1", newspaceName);
         assertEquals(dailyRate , space.getDaily_rate());
     }
-
-    /*@Test
-    public void search_space_by_date_and_occupancy_test(){
-        List<Space> availableSpaces= dao.searchSpaceByDateAndOccupancy(8,8,2);
-        List<Space> checkAvailable= dao.searchSpaceByDateAndOccupancy(9,10,2);
-
-        Space space=availableSpaces.get(availableSpaces.size()-1);
-
-        List <String> availableSpaceNames= getSpaceNames(availableSpaces);
-        List <String> checkAvailableName=getSpaceNames(checkAvailable);
-
-
-        assertNotNull(availableSpaces);
-        assertEquals("space1",space.getName());
-        assertTrue(availableSpaceNames.contains("space1") );
-        assertFalse(checkAvailableName.contains("space1"));
-
-    }*/
 
     @Test
     public void check_available_spaces_test() {
@@ -134,8 +92,8 @@ public class VenueSpaceDAOIntegrationTest{
 
         List<Space> spacesNegativeTest = dao.checkAvailableSpaces(nextVenueId, startDate1, endDate1,2 );
 
-
         assertEquals(0,spacesNegativeTest.size());
+
         //check against existing reservations
 
         LocalDate startDate2 = LocalDate.parse("2021-09-05");
@@ -151,6 +109,20 @@ public class VenueSpaceDAOIntegrationTest{
         assertEquals(1, spacesPositiveTest1.size());
         assertEquals(110,spacesPositiveTest1.get(0).getMax_occupancy());
 
+    }
+
+    @Test
+    public void retrieve_space_by_id(){
+
+        Space space = dao.retrieveSpaceById(nextSpaceId);
+        BigDecimal dailyRate= new BigDecimal(100.00).setScale(2, RoundingMode.HALF_DOWN);
+
+        assertNotNull(space);
+        assertEquals("space1",space.getName());
+        assertEquals(2, space.getMax_occupancy() );
+        assertEquals(dailyRate,space.getDaily_rate());
+        assertTrue(space.getOpen_from().equals(4));
+        assertTrue(space.getOpen_to().equals(9));
     }
 
     private long getNextVenueId() {
@@ -170,16 +142,6 @@ public class VenueSpaceDAOIntegrationTest{
             throw new RuntimeException("Something went wrong while getting an id for the new space");
         }
     }
-//    private List<String> getSpaceNames(List<Space> spaces){
-//        List <Space>allSpaces=spaces;
-//        List <String> spaceNames=new ArrayList<>();
-//
-//        for (Space space:allSpaces){
-//           spaceNames.add(space.getName());
-//        }
-//
-//       return spaceNames;
-//    }
 
 
 }
