@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../team7-java-green-week04-pairs/m1-capstone-java-cateringsystem/m1-java-capstone-catering-system.iml" filepath="$PROJECT_DIR$/../team7-java-green-week04-pairs/m1-capstone-java-cateringsystem/m1-java-capstone-catering-system.iml" />
       <module fileurl="file://$PROJECT_DIR$/m2-capstone-excelsior-venues.iml" filepath="$PROJECT_DIR$/m2-capstone-excelsior-venues.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../individual/jyotipriyadarsini-java-green/module-2/06_Database_Connectivity_DAO/lecture-jghomes-final/m2_a1-week6-dao-lecture-jghomes-final.iml" filepath="$PROJECT_DIR$/../../individual/jyotipriyadarsini-java-green/module-2/06_Database_Connectivity_DAO/lecture-jghomes-final/m2_a1-week6-dao-lecture-jghomes-final.iml" />
     </modules>
