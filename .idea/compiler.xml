@@ -6,8 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="m2-capstone-excelsior-venues" />
         <module name="m2_a1-week6-dao-lecture-jghomes-final" />
+        <module name="m2-capstone-excelsior-venues" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
